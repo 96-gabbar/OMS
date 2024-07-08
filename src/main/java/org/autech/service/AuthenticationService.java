@@ -19,6 +19,10 @@ import java.util.Map;
 @Service
 public class AuthenticationService {
 
+    private static final String readRoleName = "read";
+    private static final String writeRoleName = "write";
+    private static final String adminRoleName = "admin";
+
     @Value("${api.token.headername}")
     private String apiTokenHeaderName;
 
@@ -38,6 +42,22 @@ public class AuthenticationService {
             throw new BadCredentialsException("Invalid API Key");
         }
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.createAuthorityList(apiKeyToUserId.get(apiKeyFromRequest).getUserGroups());
+        request.setAttribute("userId", apiKeyToUserId.get(apiKeyFromRequest).getUserId());
         return new ApiKeyAuthentication(apiKeyFromRequest, grantedAuthorities);
+    }
+
+    public boolean checkDataReadAccess(String userId){
+        User user = userService.getUserById(userId);
+        return checkAdminAccess(userId) || checkWriteAccess(userId) || user.getUserGroups().contains(readRoleName);
+    }
+
+    public boolean checkWriteAccess(String userId){
+        User user = userService.getUserById(userId);
+        return checkAdminAccess(userId) || user.getUserGroups().contains(writeRoleName);
+    }
+
+    public boolean checkAdminAccess(String userId){
+        User user = userService.getUserById(userId);
+        return user.getUserGroups().contains(adminRoleName);
     }
 }

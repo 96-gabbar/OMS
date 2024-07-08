@@ -16,7 +16,7 @@ public class UserService {
     UserRepository userRepository;
 
     public User getUserById(String userId){
-        return userRepository.getReferenceById(Integer.parseInt(userId));
+        return userRepository.findById(Integer.parseInt(userId)).orElse(null);
     }
 
     public Map<String, User> getApiKeyToUserMap(){

@@ -36,7 +36,7 @@ public class AuthenticationFilter extends GenericFilterBean {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            log.info("Unauthorised API Key - {}", request);
+            log.info("Unauthorised API Key from host - {}", request.getRemoteAddr());
             PrintWriter writer = httpResponse.getWriter();
             writer.print(exp.getMessage());
             writer.flush();
