@@ -20,9 +20,6 @@ public class OMSRestController {
     @Autowired
     OrderService orderService;
 
-    @Autowired
-    RequestContext requestContext;
-
     @GetMapping(value = "/getOrder")
     public ResponseEntity<GenericOrder> getOrderById(@RequestParam(name = "orderId") String orderId){
         log.info("Get order called for id - {}", orderId);
