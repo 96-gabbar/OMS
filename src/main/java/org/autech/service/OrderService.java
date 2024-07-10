@@ -20,7 +20,7 @@ public class OrderService {
     public GenericOrder getOrder(String orderId, String userId){
         if(authenticationService.checkDataReadAccess(userId))
             return orderRepository.findById(orderId).orElse(null);
-        throw new OMSException(String.format("User: %s not privileged to read data", userId));
+        throw new OMSException(String.format("UserId: %s not privileged to read data", userId));
     }
 
     public List<GenericOrder> getAllOrders(String userId){
