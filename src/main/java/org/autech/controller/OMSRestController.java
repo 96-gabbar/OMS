@@ -18,7 +18,7 @@ public class OMSRestController {
     @Autowired
     OrderService orderService;
 
-    @GetMapping(value = "/getOrder")
+    @GetMapping(value = "/getOrder", headers = "X-API-KEY")
     public ResponseEntity<GenericOrder> getOrderById(@RequestParam(name = "orderId") String orderId, @RequestAttribute(name = "userId") String userId){
         log.info("Get order called for id - {}", orderId);
         GenericOrder genericOrder = orderService.getOrder(orderId, userId);
@@ -27,7 +27,7 @@ public class OMSRestController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping(value = "/getAllOrders")
+    @GetMapping(value = "/getAllOrders", headers = "X-API-KEY")
     public ResponseEntity<List<GenericOrder>> getAllOrders(@RequestAttribute(name = "userId") String userId){
         log.info("Get all orders called");
         return ResponseEntity.ok(orderService.getAllOrders(userId));
@@ -40,5 +40,11 @@ public class OMSRestController {
     public ResponseEntity<GenericOrder> createOrder(@RequestBody CreateNewOrderRequest createNewOrderRequest, @RequestAttribute(name = "userId") Integer userId){
         log.info("Create order called");
         return ResponseEntity.ok(orderService.createNewOrder(createNewOrderRequest.getOrderType(), Integer.toString(userId)));
+    }
+
+    @DeleteMapping(value = "/deleteOrder/{orderId}", headers = "X-API-KEY")
+    public void deleteOrder(@PathVariable("orderId") String orderId, @RequestAttribute(name = "userId") String userId){
+        log.info("Delete order called for order id: {}", orderId);
+        orderService.deleteOrder(orderId, userId);
     }
 }

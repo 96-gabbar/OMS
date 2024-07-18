@@ -40,4 +40,11 @@ public class OrderService {
         }
         throw new OMSException(String.format("User: %s not authorized to create orders", userId));
     }
+
+    public void deleteOrder(String orderId, String userId){
+        if(authenticationService.checkAdminAccess(userId))
+            orderRepository.deleteById(orderId);
+        else
+            throw new OMSException(String.format("User: %s not authorized to delete orders", userId));
+    }
 }

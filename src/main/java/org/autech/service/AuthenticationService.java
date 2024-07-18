@@ -2,11 +2,11 @@ package org.autech.service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import org.autech.Exception.OMSException;
 import org.autech.model.ApiKeyAuthentication;
 import org.autech.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,7 +39,7 @@ public class AuthenticationService {
     public Authentication getAuthentication(HttpServletRequest request) {
         String apiKeyFromRequest = request.getHeader(apiTokenHeaderName);
         if (apiKeyFromRequest == null || !apiKeyToUserId.containsKey(apiKeyFromRequest)) {
-            throw new BadCredentialsException("Invalid API Key");
+            throw new OMSException("Invalid API Key or no API Key provided");
         }
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.createAuthorityList(apiKeyToUserId.get(apiKeyFromRequest).getUserGroups());
         request.setAttribute("userId", apiKeyToUserId.get(apiKeyFromRequest).getUserId());
